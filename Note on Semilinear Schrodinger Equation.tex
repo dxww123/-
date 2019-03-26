@@ -1,0 +1,363 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{bbm}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[subsection]
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{example}[definition]{Example}
+\theoremstyle{remark}
+\newtheorem{plain}[definition]{Remark}
+
+\newcommand{\dif}{\mathrm{d}}
+
+\title{Note on Semilinear Schr\"odinger Equation}
+\author{dxww}
+
+\begin{document}
+\maketitle
+
+\section{Goal}
+Our goal is to obtain a well-posedness result of the energy-critical semilinear Schr\"odinger equation on $\mathbb{T}^3$ in the focusing case. In a precise word, we need to find a Banach space $X(\mathbb{T}^3)$ consists of some complex valued functions defined on $\mathbb{T}^3$, a Banach space $Y(\mathbb{R})$ of some maps from $\mathbb{R}$ to $X(\mathbb{T}^3)$, and a continuous map which we call solution map: $\phi:X(\mathbb{T}^3)\rightarrow Y(\mathbb{R})$. 
+
+The energy-critical semilinear Schr\"odinger equation on three-torus is stated as 
+$$i\partial_tu+\Delta u=\mu|u|^4u$$
+where $\mu=+1$ or $-1$, corresponding to the defocusing and focusing case respectively. 
+
+Now we define solutions of the equation. 
+
+\begin{definition}
+Given an interval $I\subset\mathbb{R}$, we call $u\in C(I,H^1(\mathbb{T}^3))$ a strong solution of the equation above if $u\in X^1(I)$(will be introduced shortly) and $u$ satisfies that for all $t,s\in I$, 
+$$u(t)=e^{i(t-s)\Delta}u(s)-i\mu\int_s^te^{i(t-t')\Delta}(u(t')|u(t')|^4)\dif t'$$. 
+\end{definition}
+
+If $u$ is a solution, we define the energy and mass of $u$ as 
+$$M(u)(t):=\int_{\mathbb{T}^3}|u(t)|^2\dif x$$
+$$E(u)(t):=\frac{1}{2}\int_{\mathbb{T}^3}|\nabla u(t)|^2\dif x+\frac{1}{6}\int_{\mathbb{T}^3}|u(t)|^6\dif x$$
+Suitable solutions conserve these quantities. 
+
+\section{Preliminaries}
+\subsection{Fourier transform on $\mathbb{T}^3$}
+Before we talk about Fourier transform on $\mathbb{T}^3$, we have to define $\mathbb{T}^3$. As a group, we define $\mathbb{T}^3=\mathbb{R}^3/(2\pi\mathbb{Z})^3$, note that $(2\pi\mathbb{Z})^3$ is a subgroup of $\mathbb{R}^3$. As a topological manifold, it is obtained from $[-\pi,\pi]$ by identifying the opposite boundaries. Easily see that the group homomorphism $p:\mathbb{R}^3\rightarrow\mathbb{T}^3,x\mapsto x+(2\pi\mathbb{Z})^3$ is also a covering map, thus a function on $\mathbb{T}^3$ can also be viewed as a space periodic function on $\mathbb{R}^3$, i.e. for all $m\in(2\pi\mathbb{Z})^3,f(x+m)=f(x)$. The integral on $\mathbb{T}^3$ is defined by
+$$\int_{\mathbb{T}^3}f\dif x:=\int_{[-\pi,\pi]}f\dif x$$
+
+Now we define Fourier transform on $\mathbb{T}^3$. For $\xi\in\mathbb{Z}^3$, we define
+$${\cal F}f(\xi)=\widehat{f}(\xi):=\frac{1}{(2\pi)^{3/2}}\int_{\mathbb{T}^3}f(x)e^{-ix\cdot\xi}\dif x$$
+thus $\widehat{f}$ is a function defined on $\mathbb{Z}^3$. And we also define Fourier series of $f$, which play a role of Fourier inversion of $\widehat{f}$, as
+$$\sum_{\xi\in\mathbb{Z}^3}\widehat{f}(\xi)e^{ix\cdot\xi}$$
+or for $g$ defined on $\mathbb{Z}^3$, we can write
+$${\cal F}^{-1}g(x):=\sum_{\xi\in\mathbb{Z}^3}g(\xi)e^{ix\cdot\xi}$$
+Under some regularity assumption on $f$, this series converges in some sense to $f$. 
+
+Related to Schr\"odinger equation, we define the Schr\"odinger propagator $\{e^{it\Delta}\}_{t\in\mathbb{R}}$, which act on functions, by
+$$e^{it\Delta}f(x)={\cal F}^{-1}(e^{-it|\xi|^2}\widehat{f})(x)$$
+
+\subsection{Vector-Valued Functions}
+\subsubsection{Measurability}
+Now Let $(X,{\cal F},m)$ be a measure space, and $f$ a mapping defined on $X$ with values in a Banach space $Y$. 
+
+\begin{definition}[Weak Measurability]
+$f$ is called weakly measurable if for any $\phi\in Y'$, the numerical function $\phi(f(x))$ is measurable. 
+\end{definition}
+
+\begin{definition}[Borel Measurability]
+$f$ is called Borel measurable if for any open set $U\subset U$, $f^{-1}(U)$ is measurable. 
+\end{definition}
+
+\begin{proposition}
+$f$ is Borel measurable $\Rightarrow$ $f$ is weakly measurable. 
+\end{proposition}
+\begin{proof}
+Suppose $f$ is borel measurable and $\phi\in Y'$. For any $t\in\mathbb{R}$, $(\phi\circ f)^{-1}(t,+\infty)=f^{-1}(\phi^{-1}(t,+\infty))$ is a measurable set. 
+\end{proof}
+
+\begin{definition}
+$f$ is called simple if it is constant$\ne0$ on each of a finite number of disjoint measurable sets $E_j$ with $m(E_j)<\infty$ and $f(x)=0$ on $X-\bigcup B_j$. 
+\end{definition}
+
+\begin{definition}[Strong Measurability]
+$f$ is said to be strongly measurable if there exists a sequence of simple functions strongly convergent to $f$ $m$-a.e. on $X$. 
+\end{definition}
+
+\begin{proposition}
+$f$ is strongly measurable $\Rightarrow$ $f$ is Borel measurable. 
+\end{proposition}
+\begin{proof}
+
+\end{proof}
+
+\begin{definition}
+$f$ is said to be separably-valued if its range $f(X)$ is separable. It is almost separably-valued if there exists a measurable set $B_0$ with measure zero such that $f(X-B_0)$ is separable. 
+\end{definition}
+
+\begin{proposition}
+If $f$ is strongly measurable, then $\|f\|$ is measurable. 
+\end{proposition}
+
+\begin{theorem}[Pettis Theorem]
+$f$ is strongly measurable iff it is weakly measurable and almost separably-valued. 
+\end{theorem}
+
+\subsubsection{Bochner Integral}
+\begin{definition}
+(i)If $f=\sum_{j=1}^n\mathbbm{1}_{E_j}y_j$ is a simple function, we define
+$$\int_X f\dif m:=\sum_{j=1}^nm(E_j)y_j$$. 
+
+(ii)A strongly measurable function $f$ is said to be Bochner integrable if there exists a sequence of simple functions $\{f_n\}$ converges to $f$ $a.e.$ in such a way that
+$$\lim_{n\rightarrow\infty}\int_X\|f-f_n\|_Y\dif x=0$$
+
+(iii)For a Bochner integrable function $f$ and a measurable set $E$, we define the Bochner integral of $f$ over $E$ to be
+$$\int_Ef\dif x=\lim_{n\rightarrow\infty}\int_X\mathbbm{1}_E f\dif x$$
+\end{definition}
+
+\begin{proposition}
+(i)Integral defined for the simple functions is well-defined. 
+
+(ii)Bochner integral is well-defined, i.e. it is independent of the approximating sequence $\{f_n\}$. 
+
+(iii)Integral defined for the simple functions coincides with their Bochner integral. 
+\end{proposition}
+
+\begin{proposition}
+In the case $Y=\mathbb{C}$, Bochner integral of a strongly measurable function $f$ coincides with its Lebesgue integral. 
+\end{proposition}
+
+\subsection{Function Spaces}
+\subsubsection{$U^p$ and $V^p$}
+In this section we let $H$ be a separable Hilbert space over $\mathbb{C}$. Let ${\cal Z}$ be the set of partitions $-\infty\le t_0<t_1<\cdots<t_K\le+\infty$ of the real line. Let $\mathbbm{1}_I$ denote the sharp characteristic function of a set $I\subset\mathbb{R}$. 
+
+\begin{definition}[Atomic Spaces $U^p$]
+Let $1\le p<\infty$. For $\{t_k\}_{k=k}^K\in{\cal Z}$ and $\{\phi_k\}_{k=0}^{K-1}\subset H$ with $\phi_0=0$ and $\sum_{k=0}^{K-1}\|\phi_k\|_H^p=1$, we call the piecewice defined function $a:\mathbb{R}\rightarrow H$, 
+$$a=\sum_{k=1}^K\mathbbm{1}_{[t_{k-1},t_k)}\phi_{k-1}$$
+a $U^p$-atom, and we define the atomic space $U^p(\mathbb{R},H)$ of all functions $u:\mathbb{R}\rightarrow H$ such that 
+$$u=\sum_{j=1}^\infty\lambda_ja_j\ \ \ \ \text{for }U^p\text{-atoms }a_j,\{\lambda_j\}\in l^1(\mathbb{C})$$
+with norm 
+$$\|u\|_{U^p}:=\inf\{\sum_{j=1}^\infty|\lambda_j|:u=\sum_{j=1}^\infty\lambda_ja_j,\lambda_j\in\mathbb{C},a_j\ U^p\text{-atom}\}$$
+\end{definition}
+
+\begin{proposition}
+$U^p(\mathbb{R},H)$ are Banach spaces. 
+\end{proposition}
+\begin{proof}
+
+\end{proof}
+
+\begin{proposition}
+$U^p(\mathbb{R},H)\hookrightarrow L^\infty(\mathbb{R},H)$. 
+\end{proposition}
+\begin{proof}
+
+\end{proof}
+
+\begin{proposition}
+$\forall u\in U^p(\mathbb{R},H)$, $u$ is right-continuous. 
+\end{proposition}
+\begin{proof}
+
+\end{proof}
+
+\begin{proposition}
+$\forall u\in U^p(\mathbb{R},H)$, $u(t)$ tends to 0 as $t\rightarrow-\infty$. 
+\end{proposition}
+\begin{proof}
+
+\end{proof}
+
+\begin{example}
+For a Step function $u=\sum_{k=1}^K\mathbbm{1}_{[t_{k-1},t_k)}\phi_{k-1}$ with $\phi_0=0$, let $\lambda=\left(\sum_{k=0}^{K-1}\|\phi_k\|_H^p\right)^{-1/p}$, we have $\lambda u$ is a $U^p$-atom. Thus $\|u\|_{U^p}\le\left(\sum_{k=0}^{K-1}\|\phi_k\|_H^p\right)^{1/p}$. If we estimate its norm as 
+$$\|u\|_{U^p}\le\sum_{k=0}^{K-1}\|\mathbbm{1}_{[t_{k-1},t_k)}\phi_{k-1}\|_{U^p}\le\sum_{k=0}^{K-1}\|\phi_{k-1}\|_H$$
+then we obtain a worse upper bound. From this we know it's better to estimate the $U^p$-norm of a step function as a whole, at least when $p>1$ this is the case. 
+\end{example}
+
+\begin{example}
+Consider the distribution function $F$ of a continuous random variable, we want to compute its $U^p(\mathbb{R},\mathbb{C})$-norm. 
+
+\end{example}
+
+\begin{definition}
+Let $1\le p<\infty$.
+
+(i)We define $V^p(\mathbb{R},H)$ as the space of all functions $v:\mathbb{R}\rightarrow H$ such that $v(-\infty):=\lim_{t\rightarrow-\infty}u(t)=0$ and $v(+\infty)$ exists and for which the norm 
+$$\|u\|_{V^p}:=\sup_{\{t_k\}_{k=0}^K\in{\cal Z}}\left(\sum_{k=1}^K\|v(t_l)-v(t_{k-1})\|_H^p\right)^{1/p}$$
+is finite. 
+
+(ii)Let $V_{rc}^p(\mathbb{R},H)$ denote the subspace of all right-continuous functions in $V^p(\mathbb{R},H)$, endowed with the same norm. 
+\end{definition}
+
+\begin{proposition}
+$V^p(\mathbb{R},H)$ are Banach spaces. 
+\end{proposition}
+
+\begin{proposition}
+$V_{rc}^p(\mathbb{R},H)$ is a closed subspace of $V^p(\mathbb{R},H)$. 
+\end{proposition}
+
+\begin{proposition}
+$U^p(\mathbb{R},H)\hookrightarrow V_{rc}^p(\mathbb{R},H)$. 
+\end{proposition}
+
+\begin{proposition}
+For $1\le p<q<\infty$, we have $V^p(\mathbb{R},H)\hookrightarrow V^q(\mathbb{R},H)$. 
+\end{proposition}
+
+\begin{proposition}
+For $1\le p<q<\infty$, we have $V_{rc}^p(\mathbb{R},H)\hookrightarrow U^q(\mathbb{R},H)$. 
+\end{proposition}
+
+Next we will see the duality of $U^p$ and $V^{p'}$. 
+\begin{definition}
+Let $1<p<\infty$. 
+
+For $\bm{t}=\{t_k\}_{k=0}^K\in{\cal Z}$ be a partition and functions $u\in U^p,v\in V^{p'}$, we define
+$$B_{\bm{t}}(u,v):=\sum_{k=1}^K\langle u(t_{k-1}),v(t_k)-v(t_{k-1})\rangle_H$$
+\end{definition}
+
+\begin{proposition}
+There is a unique number $B(u,v)$ with the property that for all $\varepsilon>0$ there exists $\bm{t}\in{\cal Z}$ such that for every $\bm{t}'\supset\bm{t}$ it holds
+$$\left|B_{\bm{t}'}(u,v)-B_{\bm{t}}(u,v)\right|<\varepsilon$$
+and the associated bilinear form
+$$B:U^p\times V^{p'}\rightarrow\mathbb{C}$$
+satisfies the estimate
+$$\left|B(u,v)\right|\le\|u\|_{U^p}\|v\|_{V^{p'}}$$
+\end{proposition}
+
+\begin{theorem}
+Let $1<p<\infty$. We have
+$$(U^p)^*=V^{p'}$$
+in the sense that
+$$T:V^{p'}\rightarrow(U^p)^*,T(v):=B(\cdot,v)$$
+is an isometric isomorphism. 
+\end{theorem}
+
+\begin{proposition}
+Let $1<p<\infty$. $u\in V^1$ be absolutely continuous on compact intervals and $v\in V^{p'}$. Then
+$$B(u,v)=-\int_{-\infty}^{+\infty}\langle u'(t),v(t)\rangle_H\dif t$$
+\end{proposition}
+
+\subsubsection{Sobolev Space $H^s(\mathbb{T}^3)$}
+\begin{definition}
+We define the Sobolev Space $H^s(\mathbb{T}^3)$ as the space of all $L^2(\mathbb{T}^3)$-functions for which the norm 
+$$\|f\|_{H^s(\mathbb{T}^3)}:=\left(\sum_{\xi\in\mathbb{Z}^3}\left\langle\xi\right\rangle^{2s}|\widehat{f}(\xi)|^2\right)^{1/2}$$
+is finite. 
+\end{definition}
+
+
+\begin{definition}
+We define the inhomogeneous term
+$${\cal J}(u)(t)=\int_0^te^{i(t-s)\Delta}u(s)\dif s$$
+for $u\in C(I,H^s(\mathbb{T}^3))$ and $I\ni0$. 
+\end{definition}
+
+\subsubsection{$U^p_\Delta H^s,V^p_\Delta H^s$ and $\widetilde{X}^s,\widetilde{Y}^s$}
+\begin{definition}
+For $s\in\mathbb{R}$, we let $U_\Delta^p H^s$(resp., $V_\Delta^p H^s$) be the spaces of all functions $u:\mathbb{R}\rightarrow H^s(\mathbb{T}^3)$ such that $t\mapsto e^{-it\Delta}u(t)$ is in $U^p(\mathbb{R},H)$(resp., $V^p(\mathbb{R},H)$), with norms 
+$$\|u\|_{U^p_\Delta H^s}:=\|e^{-it\Delta}u(t)\|_{U^p_t(\mathbb{R},H^s)}\ \ \ \ \|u\|_{V^p_\Delta H^s}:=\|e^{-it\Delta}u(t)\|_{V^p_t(\mathbb{R},H^s)}$$
+\end{definition}
+
+\begin{definition}
+For $s\in\mathbb{R}$ we define $\widetilde{X}^s$ as the space of all functions $u:\mathbb{R}\rightarrow H^s(\mathbb{T}^3)$ such that for every $\xi\in\mathbb{Z}^3$ the map $t\mapsto e^{it|\xi|^2}\widehat{u(t)}(\xi)$ is in $U^2(\mathbb{R},\mathbb{C})$, and for which the norm 
+$$\|u\|_{\widetilde{X}^s}:=\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}\|e^{it|\xi|^2}\widehat{u(t)}(\xi)\|^2_{U_t^2(\mathbb{R},\mathbb{C})}\right)^{1/2}$$
+is finite. 
+\end{definition}
+
+\begin{definition}
+For $s\in\mathbb{R}$ we define $\widetilde{Y}^s$ as the space of all functions $u:\mathbb{R}\rightarrow H^s(\mathbb{T}^3)$ such that for every $\xi\in\mathbb{Z}^3$ the map $t\mapsto e^{it|\xi|^2}\widehat{u(t)}(\xi)$ is in $V_{rc}^2(\mathbb{R},\mathbb{C})$, and for which the norm 
+$$\|u\|_{\widetilde{Y}^s}:=\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}\|e^{it|\xi|^2}\widehat{u(t)}(\xi)\|^2_{V_t^2(\mathbb{R},\mathbb{C})}\right)^{1/2}$$
+is finite. 
+\end{definition}
+
+\begin{proposition}
+$U^p_\Delta H^s\hookrightarrow \widetilde{X}^s\hookrightarrow \widetilde{Y}^s\hookrightarrow V^p_\Delta H^s$. 
+\end{proposition}
+
+\begin{proposition}
+Let $\mathbb{Z}^3=\sqcup C_k$ be a partition of $\mathbb{Z}^3$, then
+$$\left(\sum_k\|P_{C_k}\|_{V^p_\Delta H^s}^2\right)^{1/2}\lesssim\|u\|_{\widetilde{Y}^s}$$
+\end{proposition}
+
+\begin{definition}
+For an interval $I\subset\mathbb{R}$, $s\in\mathbb{R}$, we define $X^s(I)$ in the usual way as restriction norms; thus
+$$X^s(I):=\left\lbrace u\in C(I,H^s(\mathbb{T}^3)):\|u\|_{X^s(I)}:=\sup_{J\subset I,|J|\le1}\left[\inf_{v\cdot\mathbbm{1}_J=u\cdot\mathbbm{1}_J}\|v\|_{\widetilde{X}^s}\right]<+\infty\right\rbrace$$
+The spaces $Y^s(I)$ are defined in a similar way. 
+\end{definition}
+
+\begin{proposition}
+Let $s\ge0$, $I\ni0$ is an interval on $\mathbb{R}$, and $\phi\in H^s(\mathbb{T}^3)$. Then the linear solution $u(t)=e^{it\Delta}\phi\in X^s(I)$ and $\|u\|_{X^s(I)}\le\|\phi\|_{H^s(\mathbb{T}^3)}$. 
+\end{proposition}
+\begin{proof}
+Let $M<\inf_{t\in I}t$, $v(t)=e^{it\Delta}\phi\mathbbm{1}_{[M,+\infty)}, t\in\mathbb{R}$, then $u=v|_I$. For any interval $J\subset I$ with $|J|\le1$, we have $v\cdot\mathbbm{1}_J=u\cdot\mathbbm{1}_J$, thus $\|u\|_{X^s(I)}\le\|v\|_{\widetilde{X}^s}$. But 
+$$\|v\|_{\widetilde{X}^s}=\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}\|e^{it|\xi|^2}\widehat{v(t)}(\xi)\|^2_{U_t^2(\mathbb{R},\mathbb{C})}\right)^{1/2}$$
+$$=\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}\|\widehat{\phi}(\xi)\mathbbm{1}_{[M,+\infty)}\|^2_{U_t^2(\mathbb{R},\mathbb{C})}\right)^{1/2}\le\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}|\widehat{\phi}(\xi)|^2\right)^{1/2}=\|\phi\|_{H^s(\mathbb{T}^3)}$$
+Hence $\|u\|_{X^s(I)}\le\|\phi\|_{H^s(\mathbb{T}^3)}$
+Next we have to show $u\in C(I,H^s(\mathbb{T}^3))$. Fix $t_0\in I,\varepsilon>0$, we compute: 
+$$\|u(t)-u(t_0)\|_{H^s}=\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}|\widehat{u(t)}(\xi)-\widehat{u(t_0)}(\xi)|^2\right)^{1/2}$$
+$$=\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}|\widehat{u(t)}(\xi)-\widehat{u(t_0)}(\xi)|^2\right)^{1/2}$$
+$$=\left(\sum_{\xi\in\mathbb{Z}^3}\langle\xi\rangle^{2s}|\widehat{\phi}(\xi)|^2\left|e^{-it|\xi|^2}-e^{-it_0|\xi|^2}\right|^2\right)^{1/2}$$
+Choose $R>0$ such that $\sum_{|\xi|>R}\langle\xi\rangle^{2s}|\widehat{\phi}(\xi)|^2<\varepsilon^2/8$, then for all $t\in I$ satisfying 
+$$|t-t_0|\le\frac{\varepsilon}{\sqrt{2}R^2\|\phi\|_{H^s}}$$
+we have 
+$$\|u(t)-u(t_0)\|_{H^s}^2$$
+$$=\sum_{|\xi|\le R}\langle\xi\rangle^{2s}|\widehat{\phi}(\xi)|^2\left|e^{-it|\xi|^2}-e^{-it_0|\xi|^2}\right|^2+\sum_{|\xi|> R}\langle\xi\rangle^{2s}|\widehat{\phi}(\xi)|^2\left|e^{-it|\xi|^2}-e^{-it_0|\xi|^2}\right|^2$$
+$$\le\sum_{|\xi|\le R}\langle\xi\rangle^{2s}|\widehat{\phi}(\xi)|^2|t-t_0|^2|\xi|^4+4\sum_{|\xi|> R}\langle\xi\rangle^{2s}|\widehat{\phi}(\xi)|^2$$
+$$\le|t-t_0|^2R^4\|\phi\|_{H^s}^2+\frac{\varepsilon}{2}\le\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon$$
+Thus $u$ is a continuous map from $I$ to $H^s(\mathbb{T}^3)$. 
+\end{proof}
+
+\begin{definition}[$Z$-norm]We define a weaker critical norm
+$$\|u\|_{Z(I)}:=\sum_{p\in\{p_0,p_1\}}\sup_{J\le I,|J|\le1}\left(\sum_NN^{5-p/2}\|P_Nu(t)\|_{L^p_{x,t}(\mathbb{T}^3\times J)}\right)^{1/p}$$
+and 
+$$\|u\|_{Z'(I)}=\|u\|_{Z(I)}^{1/2}\|u\|_{X^1(I)}^{1/2}$$
+
+\begin{proposition}
+Let $s\ge0$ and $T>0$. For $f\in L^1([0,T);H^s(\mathbb{T}^3))$, we have ${\cal J}(f)\in X^s([0,T))$ and 
+$$\|{\cal J}(f)\|_{X^s([0,T))}\le\sup_{v\in Y^{-s}([0,T)),\|v\|_{Y^{-s}}=1}\left|\int_
+0^T\int_{\mathbb{T}^3}f(t,x)\overline{v(t,x)}\dif x\dif t\right|$$
+\end{proposition}
+\begin{proof}
+We extend ${\cal J}(f)$ to $g$ by $g(t):=\int_0^Te^{i(t-s)\Delta}f(s)\dif s$ for $t>T$ and $g(t)=0$ for $t<0$. For each $\xi$ we define $\varphi_\xi(t)=e^{it|\xi|^2}\widehat{g(t)}(\xi)$ and compute: 
+$$\varphi_\xi(t)=e^{it|\xi|^2}{\cal F}\left[\int_0^te^{i(t-s)\Delta}f(s)\dif s\right](\xi)$$
+Here the integral in the Bochner sense and the Banach space is $L^2(\mathbb{T}^3)$. Since Fourier transform is a bounded linear operator from $L^2(\mathbb{T}^3)$ to $L^2(\mathbb{Z}^3)$, and multiplication with $e^{it|\xi|^2}$ is a unitary operator on $L^2(\mathbb{Z}^3)$, we know they commute with Bochner integral. What's more, for $h\in L^2(\mathbb{Z}^3)$ and $\xi\in\mathbb{Z}^3$, $|h(\xi)|\le\|h\|_{L^2(\mathbb{Z}^3)}$, thus $(\int h)(\xi)=\int h(\xi)$, where the latter integral is also in the Bochner sense. Hence
+$$\varphi_\xi(t)=e^{it|\xi|^2}\left[\int_0^t{\cal F}(e^{i(t-s)\Delta}f(s))\dif s\right](\xi)$$
+$$=e^{it|\xi|^2}\int_0^te^{i(s-t)|\xi|^2}\widehat{f(s)}(\xi)\dif s=\int_0^te^{is|\xi|^2}\widehat{f(s)}(\xi)\dif s$$
+Note that $\left|e^{is|\xi|^2}|\widehat{f(s)}(\xi)\right|\le\|f\|_{L^2}$, thus $\varphi_\xi(t)$ is absolutely continuous and of bounded variation, and hence in $V^1(\mathbb{R},\mathbb{C})\hookrightarrow U^2(\mathbb{R},\mathbb{C})$. 
+\end{proof}
+
+\begin{lemma}
+For $u_1,\cdots,u_5\in X^1(I)$, $|I|\le1$, the estimate
+$$\|{\cal J}\prod_{k=1}^5\widetilde{u}_k\|_{X^1(I)}\lesssim\sum_{k=1}^5\|u_k\|_{X^1(I)}\prod_{j\ne k}\|u_j\|_{Z'(I)}$$
+holds true, where $\widetilde{u}_k\in\{u_k,\overline{u_k}\}$. 
+\end{lemma}
+
+\begin{proposition}
+For an interval $I\ni0$ with $|I|\le1$, and $u\in X^1(I)$, we have ${\cal J}(|u|^4u)\in X^1(I)$ and $\|{\cal J}(|u|^4u)\|_{X^1(I)}\lesssim\|u\|_{X^1(I)}$. 
+\end{proposition}
+\begin{proof}
+
+\end{proof}
+
+\end{definition}
+
+\subsection{Results in the defocusing case}
+\subsubsection{Local theory}
+\begin{theorem}[Local Existence]
+Given $E>0$, there exists $\delta_0=\delta_0(E)>0$ such that if $\|\phi\|_{H^1(\mathbb{T}^3)}\le E$ and 
+$$\|e^{it\Delta}\phi\|_{Z(I)}\le\delta_0$$
+on some interval $I\ni0$, $|I|\le1$, then there exists a unique solution $u\in X^1(I)$ in the defocusing case satisfying $u(0)=\phi$. Besides, 
+$$\|u-e^{it\Delta}\phi\|_{X^1(I)}\lesssim_E\|e^{it\Delta}\phi\|_{Z(I)}^{3/2}$$
+The quantities $E(u)$ and $M(u)$ are conserved on $I$. 
+\end{theorem}
+\begin{proof}
+We use the usual Picard iteration method. Consider a map $\Phi:X^1(I)\rightarrow X^1(I)$: 
+$$\Phi(u):=e^{it\Delta}\phi-i\int_0^te^{i(t-s)\Delta}(|u(s)|^4u(s))\dif s$$
+Then 
+$$\|\Phi(u)\|_{X^1(I)}$$
+\end{proof}
+
+\end{document}
