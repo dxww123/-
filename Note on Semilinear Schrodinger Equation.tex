@@ -9,15 +9,17 @@
 \usepackage{bbm}
 
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{proposition}[definition]{Proposition}
-\newtheorem{lemma}[definition]{Lemma}
-\newtheorem{theorem}[definition]{Theorem}
-\newtheorem{example}[definition]{Example}
+\newtheorem{definition}{定义}[section]
+\newtheorem{proposition}[definition]{命题}
+\newtheorem{fact}[definition]{事实}
+\newtheorem{lemma}[definition]{引理}
+\newtheorem{theorem}[definition]{定理}
+\newtheorem{example}[definition]{例}
 \theoremstyle{remark}
-\newtheorem{plain}[definition]{Remark}
+\newtheorem{remark}[definition]{注记}
 
 \newcommand{\dif}{\mathrm{d}}
+\newcommand{\ovl}{\overline}
 
 \title{非线性Schr\"odinger方程笔记}
 \author{dxww}
@@ -49,14 +51,263 @@ $$\widehat{f}(\xi)=\frac{1}{(2\pi)^d}\int_{\mathbb{T}^d}f(x)e^{ix\cdot\xi}\dif x
 \chapter{$\mathbb{R}^d$上的非线性Schr\"odinger方程}
 我们要考虑的方程是
 $$iu_t+\Delta u=\mu|u|^{p-1}u$$
-这里$p>1$, $\mu=\pm1$. 当$\mu=-1$时, 我们说这个方程是散焦型(defocusing)的, $\mu=1$时称为聚焦型(focusing). 
+这里$p>1$, $\mu=\pm1$. 当$\mu=+1$时, 我们说这个方程是散焦型(defocusing)的, $\mu=-1$时称为聚焦型(focusing). 我们把这个方程简记为(NLS$^p_\mu$), 如果不特指某个$\mu$或某些$p$, 我们也会省去上下标. 
 \section{线性方程}
+\section{解的定义}
+\begin{definition}[古典解]
+若$u\in C(I\times\mathbb{R}^d)$, 且对时间有一阶偏导数, 对空间有所有二阶偏导数, 且在古典意义下满足(NLS), 则称$u$是(NLS)的古典解. 
+\end{definition}
+
+\begin{definition}[$H^s$强解]
+若$u\in C_t^0(I;H^s(\mathbb{R}^d))$满足: $\forall t_0,t\in I$
+$$u(t)=e^{i(t-t_0)\Delta}u(t_0)-i\mu\int_{t_0}^te^{i(t-s)\Delta}(|u(s)|^{p-1}u(s))\dif x$$
+则称$u$是(NLS)的$H^s$强解, 这里的等号是指${\cal D}'(I\times\mathbb{R}^d)$中的相等, 即分布的相等. 等式右边的积分是某个Banach空间上的Bochner积分.  
+\end{definition}
+
+\begin{remark}
+我们没有指明Bochner积分是哪个Banach空间上的积分, 这需要视实际情况而定. 譬如说, 当$s>d/2$并且$p$时, $H^s$关于乘积封闭, 此时$|u|^{p-1}u\in H^s$, 积分就视为$H^s$上的积分. 而如果$u\in L^{p'}_tL^{q'}_x(I\times\mathbb{R}^d)$, 那么对任何$s\in I$, $e^{i(t-s)\Delta)}\left(|u(s)|^{p-1}u(s)\right)\in L^q(\mathbb{R}^d)$, 此时积分就在$L^q$上进行. 也就是说, 进行哪个空间上的Bochner积分视$u$所在的空间而定.
+\end{remark}
+
+\begin{proposition}
+$1\le p<\infty$, 则$L^p\hookrightarrow{\cal S}'$是单射. 
+\end{proposition}
+
+\begin{proposition}
+设$f(t)\in C([0,T];{\cal S})$, 则$\int_0^tf\dif t$不论作为哪个$L^p$空间($1\le p<\infty$)上的Bochner积分, 结果都是一样的. 
+\end{proposition}
+\begin{proof}
+我们先证明所有的积分在${\cal S}'$上相等. 任取$\phi\in{\cal S}$, $L_\phi^p(u)=\int u\phi\dif x$是$L^p$到$\mathbb{C}$的有界线性算子, 故
+$$L_\phi^p\left(\int_0^Tf(t)\dif t\right)=\int_0^TL_\phi^p(f(t))\dif t$$
+对$p\ne q$而言, 我们却总有$L^p_\phi(f(t))=L^q_\phi(f(t))$, 故对任何$\phi$, 我们都有
+$$L_\phi^p\left(\int_0^Tf(t)\dif t\right)=L_\phi^q\left(\int_0^Tf(t)\dif t\right)$$
+也就是说$\int_0^tf\dif t$在$L^p$和$L^q$内各自积分完毕后, 在${\cal S}'$中代表同一个元素. 这样由$L^p\hookrightarrow{\cal S}'$是单射知$\int_0^tf\dif t\in L^p\cap L^q$是没有歧义的. 
+\end{proof}
 \section{Strichartz估计}
+\section{局部理论}
+\subsection{$L^2$理论}
+我们来建立初值属于$L^2(\mathbb{R}^d)$时的局部适定性. 
+
+\subsubsection{次临界情形}
+我们现在假定$0<p-1<4/d$. 
+
+\begin{theorem}[存在性]
+设$u_0\in L^2(\mathbb{R}^d)$. 则存在$T\approx \|u_0\|^{-c}$使得在$C_t^0([-T,T];L^2(\mathbb{R}^d))\cap L_t^qL_x^r([-T,T]\times\mathbb{R}^d)$上存在(NLS)的$L^2$强解$u$满足$u(0)=u_0$. 其中$r=p+1$且$(q,r)$是容许对.
+\end{theorem}
+\begin{proof}
+令$X_T=C_t^0([-T,T];L^2(\mathbb{R}^d))\cap L_t^qL_x^r([-T,T]\times\mathbb{R}^d)$. 此时可以算出$r'p=r$. 
+
+定义$X_T$上的范数为
+$$\|u\|_{X_T}=\|u\|_{L_t^\infty([-T,T];L^2(\mathbb{R}^d))}+\|u\|_{L_t^qL_x^r([-T,T]\times\mathbb{R}^d)}$$
+
+令$\Phi:X_T\rightarrow X_T$为
+$$\Phi(u)(t)=e^{it\Delta}u_0-i\mu\int_0^te^{i(t-s)\Delta}(|u(s)|^{p-1}u(s))\dif s$$
+
+我们现在来估计$\|\Phi(u)\|_{X_T}$: 
+$$\|\Phi(u)\|_{X_T}\le\|e^{it\Delta}u_0\|_{X_T}+\left\|\int_0^te^{i(t-s)\Delta}|u|^{p-1}u(s)\dif s\right\|_{X_T}$$
+$$\overset{\text{Strichartz}}{\le} C_1\|u_0\|_{L^2}+C_1\||u|^{p-1}u\|_{L_t^{q'}L_x^{r'}}=C_1\|u_0\|_{L^2}+C_1\|u\|_{L_t^{q'p}L_x^{r}}^p$$
+$$\overset{\text{H\"older}}{\le}C_1\|u_0\|_{L^2}+C_1(2T)^{\frac{q-p-1}{q}}\|u\|_{L_t^{q}L_x^{r}}^p$$
+$$=C_1\|u_0\|_{L^2}+C_2T^{\frac{q-p-1}{q}}\|u\|_{L_t^{q}L_x^{r}}^p$$
+
+再估计$\|\Phi(u)-\Phi(v)\|_{X_T}$: 
+$$\|\Phi(u)-\Phi(v)\|_{X_T}=\left\|\int_0^te^{i(t-s)\Delta}(|u|^{p-1}u-|v|^{p-1}v)\dif s\right\|_{X_T}$$
+$$\le C_1\||u|^{p-1}u-|v|^{p-1}v\|_{L_t^{q'}L_x^{r'}}$$
+
+为了估计$|u|^{p-1}u-|v|^{p-1}v$的时空范数, 我们令$f(\lambda)=|\lambda u+(1-\lambda)v|^{p-1}(\lambda u+(1-\lambda)v)$, 则可以算出$f'(\lambda)=p|\lambda u+(1-\lambda)v|(u-v)$, 这样我们有
+$$\left||u|^{p-1}u-|v|^{p-1}v\right|=|f(1)-f(0)|\le\int_0^1|f'(\lambda)|\dif\lambda$$
+$$\le\int_0^1p(|u|+|v|)^{p-1}|u-v|\dif\lambda=p(|u|+|v|)^{p-1}|u-v|$$
+这样我们知道
+$$\|\Phi(u)-\Phi(v)\|_{X_T}\le pC_1\|(|u|+|v|)^{p-1}|u-v|\|_{L_t^{q'}L_x^{r'}}$$
+$$\overset{\text{H\"older}}{\le} pC_1\|(|u|+|v|)^{p-1}\|_{L_t^{\frac{q}{q-2}}L_x^{\frac{r}{r-2}}}\|u-v\|_{L_t^qL_x^r}$$
+$$=p C_1\||u|+|v|\|_{L_t^{\frac{q(p-1)}{q-2}}L_x^{r}}^{p-1}\|u-v\|_{L_t^qL_x^r}$$
+$$\overset{\text{H\"older}}{\le}pC_1(2T)^{\frac{q-p-1}{q}}\||u|+|v|\|_{L_t^qL_x^r}^{p-1}\|u-v\|_{L_t^qL_x^r}$$
+$$=C_3T^{\frac{q-p-1}{q}}\||u|+|v|\|_{L_t^qL_x^r}^{p-1}\|u-v\|_{L_t^qL_x^r}$$
+$$\le C_3T^{\frac{q-p-1}{q}}\left(\|u\|_{L_t^qL_x^r}+\|v\|_{L_t^qL_x^r}\right)^{p-1}\|u-v\|_{L_t^qL_x^r}$$
+
+现在回过头来看我们都算出了什么: 
+$$\left\{
+\begin{aligned}
+&\|\Phi(u)-\Phi(v)\|_{X_T}\le C_3T^{\frac{q-p-1}{q}}\left(\|u\|_{X_T}+\|v\|_{X_T}\right)^{p-1}\|u-v\|_{X_T}\\
+&\|\Phi(u)\|_{X_T}\le C_1\|u_0\|_{L^2}+C_2T^{\frac{q-p-1}{q}}\|u\|_{X_T}^p
+\end{aligned}
+\right.$$
+我们现在希望$\Phi$在$\ovl{B(0,2C_1\|u_0\|_{L^2})}\subset X_T$上成为压缩映射, 为此, 我们取$T$充分小, 使得
+$$\left\{
+\begin{aligned}
+&C_3T^{\frac{q-p-1}{q}}(4C_1\|u_0\|_{L^2})^{p-1}\le\frac{1}{2}\\
+&C_2T^{\frac{q-p-1}{q}}(2C_1\|u_0\|_{L^2})^p\le C_1\|u_0\|_{L^2}
+\end{aligned}
+\right.$$
+\end{proof}
+
+\begin{theorem}[唯一性]
+$\forall T>0$,设$u,v\in C_t^0([-T,T];L^2(\mathbb{R}^d))\cap L_t^qL_x^r([-T,T]\times\mathbb{R}^d)$都是(NLS)的$L^2$强解, 则在$C_t^0([-T,T];L^2(\mathbb{R}^d))\cap L_t^qL_x^r([-T,T]\times\mathbb{R}^d)$中$u=v$. 
+\end{theorem}
+
+\begin{theorem}[局部适定性]
+设$u\in C_t^0([-T,T];L^2(\mathbb{R}^d))\cap L_t^qL_x^r([-T,T]\times\mathbb{R}^d)$是(NLS)的$L^2$强解, 则对任何$0<T'<T$, 存在$u_0$的$L^2$邻域$U$, 和$u$的$C_t^0([-T,T];L^2(\mathbb{R}^d))\cap L_t^qL_x^r([-T,T]\times\mathbb{R}^d)$邻域$V$, 使得对任何$v_0\in U$, 都存在$L^2$强解$v\in V$, 且$v_0\mapsto v$是Lipshitz的. 
+\end{theorem}
+
+\subsubsection{临界情形}
+我们现在假定$p=4/d+1$. 
+
+\begin{theorem}[存在性]
+存在一个只依赖于$d$的绝对常数$\eta$, 使得对任何$u_0\in L^2(\mathbb{R}^d)$, 只要$\|e^{it\Delta}u_0\|_{L^{\frac{2(d+2)}{d}}([-T,T]\times\mathbb{R}^d)}\le\eta$, 那么存在$u\in C_t^0([-T,T];L^2(\mathbb{R}^d))\cap L^{\frac{2(d+2)}{d}}([-T,T]\times\mathbb{R}^d)$成为(NLS)的$L^2$强解. 
+\end{theorem}
+\subsection{$H^1$理论}
+\subsection{$\dot{H}^1$理论}
+\subsection{$H^s$理论}
+\section{守恒律}
+\subsection{质量, 能量以及动量}
+守恒律和方程本身的对称性是息息相关的. 知道了保持方程不变的一个单参数变换群, 由Noether定理就可以找到一个相应的对称性. 为此, 我们首先需要知道方程有哪些对称性. 
+
+\begin{fact}
+设$u(t,x)\in C^2(I\times\mathbb{R}^d)$满足(NLS), 则以下函数也都满足(NLS):
+ 
+(1)相旋转: $e^{i\theta}u(t,x)$; 
+
+(2)空间平移: $u(t,x-x_0)$;
+
+(3)时间平移: $u(t-t_0,x)$; 
+
+(4)伸缩: $\lambda^{2/(p-1)}u(\lambda^2t,\lambda x)$
+\end{fact}
+
+可以看到, 上面这四种不变性都是由单参数变换群给出的. 由Noether定理, 在方程两边乘上变换群的生成元, 然后变形(取实部或虚部, 然后积分), 就可以得到相应的守恒律. 
+
+\paragraph{相旋转与质量守恒}对满足(NLS)的$u\in H^2(I\times\mathbb{R}^d)$, 记$R_\theta u(t,x)=e^{i\theta}u(t,x)$, 则相旋转变换群的生成元为$\frac{\dif}{\dif\theta}\left.\right|_{\theta=0}R_\theta u(t,x)=iu(t,x)$. 在方程两边乘上$\overline{iu}=-i\overline{u}$(也可以理解为方程两边先取共轭再乘上$iu$, 取共轭并不会丢失任何信息), 得到
+$$u_t\overline{u}-i\overline{u}\Delta u=-i\mu|u|^{p+1}$$
+取实部, 积分, 得到
+$$\int \operatorname{Re}u_t\overline{u}\dif x=\int \operatorname{Re}i\overline{u}\Delta u\dif x=-\int\operatorname{Im}\overline{u}\Delta u\dif x$$
+注意到$\operatorname{Re}u_t\overline{u}=(u_t\overline{u}+\overline{u}_tu)/2=\partial_t|u|^2/2$, 故
+$$\frac{1}{2}\frac{\dif}{\dif t}\int|u|^2\dif x=-\operatorname{Im}\int\overline{u}\Delta u\dif x=\operatorname{Im}\int|\nabla u|^2\dif x= 0$$
+这就告诉我们质量
+$$M(u(t))=\int|u(t)|^2\dif x$$
+是一个守恒量. 
+
+\paragraph{时间平移与能量守恒}对满足(NLS)的$u\in H^2(I\times\mathbb{R}^d)$, 记$T_\tau(t,x)=u(t-\tau,x)$, 则$\frac{\dif}{\dif \tau}|_{\tau=0}T_\tau u(t,x)=-\partial_tu(t,x)$. 于是我们在方程两边乘上$\overline{u}_t$, 得到
+$$i|u_t|^2+\overline{u}_t\Delta u=\mu\overline{u}_t|u|^{p-1}u$$
+取实部, 积分, 得到
+$$\operatorname{Re}\int\overline{u}_t\Delta u\dif x=\operatorname{Re}\int\mu\overline{u}_t|u|^{p-1}u\dif x $$
+注意到$\partial_t|u|^{p+1}=\partial_t(u\overline{u})^{(p+1)/2}=\frac{p+1}{2}|u|^{p-1}(u_t\overline{u}+u\overline{u}_t)=(p+1)\operatorname{Re}|u|^{p-1}u\overline{u}_t$, 我们有$\operatorname{Re}\mu|u|^{p-1}u\overline{u}_t=\frac{\mu}{p+1}\partial_t|u|^{p+1}$, 故
+$$\frac{\mu}{p+1}\frac{\dif}{\dif t}\int|u|^{p+1}\dif x=-\operatorname{Re}\int\nabla u\cdot\nabla\overline{u}_t\dif x=-\frac{1}{2}\frac{\dif}{\dif t}\int|\nabla u|^2\dif x$$
+即
+$$\frac{\dif}{\dif t}\left(\frac{1}{2}\int|\nabla u|^2\dif x+\frac{\mu}{p+1}\int|u|^{p+1}\dif x\right)=0$$
+这说明能量
+$$E(u(t))=\frac{1}{2}\int|\nabla u(t)|^2\dif x+\frac{\mu}{p+1}\int|u(t)|^{p+1}\dif x$$
+也是一个守恒量. 
+
+\paragraph{空间平移与动量守恒}对满足(NLS)的$u\in H^2(I\times\mathbb{R}^d)$, 记$\Pi_{y}u(t,x)=u(t,x-ye_j)$, 则$\frac{\dif}{\dif y}|_{y=0}\Pi_yu(t,x)=-\partial_ju(t,x)$. 在方程两边乘上$\nabla\overline{u}$, 得到
+$$iu_t\nabla\overline{u}+\Delta u\nabla\overline{u}=\mu|u|^{p-1}u\nabla\overline{u}$$. 
+取实部, 积分, 有
+$$-\int\operatorname{Im}u_t\nabla\overline{u}\dif x+\int\operatorname{Re}\Delta u\nabla\overline{u}\dif x=\int\operatorname{Re}\mu|u|^{p-1}u\nabla\overline{u}\dif x$$
+我们逐项处理. 第一项: 
+$$\int\operatorname{Im}u_t\nabla\overline{u}\dif x=\frac{1}{2}\int(u_t\nabla\overline{u}-\overline{u}_t\nabla u)\dif x=\frac{1}{2}\int(u_t\nabla\overline{u}+u\nabla\overline{u}_t)\dif x=\frac{1}{2}\frac{\dif}{\dif t}\int u\nabla\overline{u}\dif x$$
+第二项: 
+$$\int\operatorname{Re}\Delta u\nabla\overline{u}\dif x=\int\operatorname{Re}\partial_k\partial_ku\partial_j\ovl u\dif x=\int\operatorname{Re}\partial_j\partial_ku\partial_k\ovl u\dif x$$
+$$=\frac{1}{2}\int(\partial_j\partial_ku\partial_k\ovl u+\partial_ku\partial_j\partial_k\ovl u)\dif x=\frac{1}{2}\int\partial_j|\nabla u|^2\dif x=0$$
+第三项: 
+$$\int\operatorname{Re}\mu|u|^{p-1}u\nabla\overline{u}\dif x=\frac{\mu}{p+1}\int\nabla|u|^{p+1}\dif x=0$$
+于是我们得到
+$$\frac{\dif}{\dif t}\int u\nabla\overline{u}\dif x=0$$
+这就是说
+$$\bm{p}(u(t))=\int u(t)\nabla\ovl{u(t)}\dif x$$
+是一个守恒量. 
+
+用分部积分可以看出$\bm{p}$的每个分量都是纯虚数, 所以动量也经常写作$\bm{p}(u(t))=\operatorname{Im}\int u(t)\nabla\ovl{u(t)}\dif x$, 并且我们使用带虚部的这个版本. 
+
+守恒律在证明解是整体的时候很有用, 尤其是质量守恒和能量守恒. 质量守恒告诉我们解的$L^2$范数是不变的, 在散焦($\mu=1$)的情形下能量守恒能给我们$L^{p+1}$和$\dot{H}^1$范数的一致界. 在局部理论中我们看到, 我们在证明中用压缩映射构造的解的存在时间区间有时会依赖于这些范数, 所以如果这些范数有界, 我们就可以把解延拓到整个实轴上成为整体解. 
+
+
+\subsection{动量守恒的改造——Morawetz估计}
+由于动量守恒不能直接给出一些范数的有界性, 所以我们对它进行某种改造. 设$\bm{a}$是$\mathbb{R}^d$上的一个实向量场, 我们定义附属于$\bm{a}$的Morawetz量为
+$$M_{\bm{a}}(t)=\operatorname{Im}\int\bm{a}\cdot u\nabla\overline{u}\dif x$$
+
+我们来计算Morawetz量的时间导数. 
+$$\frac{\dif}{\dif t}M_{\bm{a}}(t)=\operatorname{Im}\frac{\dif}{\dif t}\int\bm{a}\cdot u\nabla\overline{u}\dif x$$
+$$=\operatorname{Im}\int a_j(u_t\partial_j\overline{u}+u\partial_j\overline{u}_t)\dif x=\operatorname{Im}\int u_t(\partial_ja_j\ovl{u}+2a_j\partial_j\ovl{u})\dif x$$
+而由方程, $u_t=-i(\mu|u|^{p-1}u-\Delta u)$, 代入上式, 有
+$$\frac{\dif}{\dif t}M_{\bm{a}}(t)=-\operatorname{Re}\int (\mu|u|^{p-1}u-\Delta u)(\partial_ja_j\ovl{u}+a_j\partial_j\ovl{u})\dif x$$
+经过变形(用分部积分尽量把导数往$\bm{a}$上转移)和化简, 得到
+$$\frac{\dif}{\dif t}M_{\bm{a}}(t)=-\mu\frac{p-1}{p+1}\int\operatorname{div}\bm{a}|u|^{p+1}\dif x+\frac{1}{2}\int\Delta(\operatorname{div}\bm{a})|u|^2\dif x-2\operatorname{Re}\int\partial_ku\partial_j\ovl{u}\partial_ka_j\dif x$$
+这样取不同的$\bm{a}$我们即可获得不同的等式. 
+
+现在我们考虑一个新的量, 称为Virial量. 设$f\in C^4(\mathbb{R}^d)$是实值函数, 我们定义附属于$f$的Virial量为
+$$V_f(t)=\int |u(t)|^2f\dif x$$
+经过计算可以得知:  
+$$\frac{\dif}{\dif t}V_f(t)=-2M_{\nabla f}(t)$$
+故
+$$\frac{\dif^2}{\dif t^2}V_f(t)=2\mu\frac{p-1}{p+1}\int|u|^{p+1}\Delta f\dif x-\int|u|^2\Delta^2f\dif x+4\int\nabla \ovl{u}^T\operatorname{H}_f\nabla u\dif x$$
+
+\paragraph{$f=|x|^2,\bm{a}=x$的情形}此时$\operatorname{div}\bm{a}=d, \Delta(\operatorname{div}\bm{a})=0, \partial_ka_j=\delta_{kj}$, 故
+$$\frac{\dif}{\dif t}M_{x}(t)=-\mu d\frac{p-1}{p+1}\int|u|^{p+1}\dif x-2\int|\nabla u|^2\dif x$$
+
+这样我们有
+$$\frac{\dif^2}{\dif t^2}V_{|x|^2}(t)=4\mu d\frac{p-1}{p+1}\int|u|^{p+1}\dif x+8\int|\nabla u|^2\dif x$$
+这个式子也叫Virial恒等式. 
+
+注意到$V(t)$是一个恒正的量, 如果我们能证明上式右边小于等于$16E(u(t))$, 而$u$的能量又为负的话, 就能得到解的爆破. 那么什么时候上式右边小于$16E(u(t))$呢? 计算: 
+$$16E(u(t))-\frac{\dif^2}{\dif t^2}V(t)=\left(\frac{16\mu}{p+1}-4\mu d\frac{p-1}{p+1}\right)\|u\|_{p+1}^{p+1}$$
+$$=\frac{4\mu(4-d(p-1))}{p+1}\|u\|_{p+1}^{p+1}$$
+故当$\mu=1,p-1\le4/d$时, 或当$\mu=-1,p-1=4/d$时, 上式右端都是非负的, 此时
+$$\frac{\dif^2}{\dif t^2}V(t)\le16E(u(t))$$
+但是$\mu=1$时, $u$的能量一定是正的, 此时并不能得到什么结论. 当$\mu=-1,p-1=4/d$时, 如果$E(u)<0$, 我们就能得到有限时间内的爆破. 换言之, $L^2$临界的聚焦型方程的负能量解会在有限时间内爆破. 
+
+\paragraph{$f=|x|,\bm{a}=x/|x|$的情形}我们只考虑$d=3$的情形, 因为此时能最方便地计算有关$\bm{a}$的量. 此时$\partial_ka_j=\partial_k\frac{x_k}{|x|}=\frac{\delta_{kj}}{|x|}-\frac{x_kx_j}{|x|^3}$, 故$\operatorname{div}\bm{a}=2/|x|$, $\Delta(\operatorname{div}\bm{a})=-8\pi\delta_0$. 这样我们有
+$$\frac{\dif}{\dif t}M_{x/|x|}(t)=-\mu\frac{p-1}{p+1}\int\frac{2|u|^{p+1}}{|x|}\dif x+\frac{1}{2}\int(-8\pi\delta_0)|u|^2\dif x$$
+$$-2\operatorname{Re}\int\partial_ku\partial_j\ovl{u}\left(\frac{\delta_{kj}}{|x|}-\frac{x_kx_j}{|x|^3}\right)\dif x$$
+$$=-2\mu\frac{p-1}{p+1}\int\frac{|u|^{p+1}}{|x|}\dif x-4\pi|u(t,0)|^2-2\int\left(\frac{|\nabla u|^2}{|x|}-\frac{|x\cdot\nabla u|^2}{|x|^3}\right)\dif x$$
+故当$\mu=1,p>1$时
+$$\frac{\dif}{\dif t}M_{x/|x|}(t)\le-2\frac{p-1}{p+1}\int\frac{|u|^{p+1}}{|x|}\dif x-4\pi|u(t,0)|^2<0$$
+把$f$加入一起考虑, 有
+$$\frac{\dif^2}{\dif t^2}\int|x||u|^2\dif x=4\frac{p-1}{p+1}\int\frac{|u|^{p+1}}{|x|}\dif x+8\pi|u(t,0)|^2>0$$
+如果能证明$V_{|x|}(t)$有界, 而它的二阶导又大于某个正数, 那么我们就可以断言解的爆破. 或者我们也可以说明$|M_{x/|x|}(t)|$有界(这个看起来比较容易), 而它的导数小于某个负数, 也能得到解的爆破. 事实上, 我们有最浅易的估计: 
+$$|M_{x/|x|}(t)|\le\|u\|_{L^2}\|\nabla u\|_{L^2}\overset{\mu=1}{\le}2M(u(t))E(u(t))$$
+
+\subsection{寻找$\mathbb{T}^d$上的Virial型等式}首先我们要取合适的$f$或者$\bm{a}$. 但是不幸的是, $\mathbb{T}^d$上不存在非平凡的光滑函数$f$满足$\Delta f$的符号不变, 也不存在常向量场以外的向量场$\bm{a}$满足$\operatorname{div}\bm{a}$的符号不变. 
+
+为了克服这点, 我们取的$f$必须带有奇点, 或者我们也可以在分部积分时考虑边界项. 下面我们就这两种情况做一些尝试. 
+
+\paragraph{考虑边界项}为了简单起见, 我们把$u$看作$\mathbb{R}^d$上的周期函数, 我们记$D_y=\Pi_j[y_j-\pi,y_j+\pi]$, 即以$y$为中心的方体. 令$f_y(x)=|x-y|^2$是定义在$D_y$上的函数, $\bm{a_y}=x-y$是定义在$D_y$上的函数. 
+
+令
+$$V_f^y(t)=\int_{D_y}|u|^2f_y\dif x$$
+$$M_{\bm{a}}^y(t)=\operatorname{Im}\int_{D_y}\bm{a}_y\cdot u\nabla\ovl{u}\dif x$$
+
+显而易见, $V_f^y(t),M_{\bm{a}}^y(t)$的值和$y$都是没有关系的, 所以当$y=0$时我们省去$y$不写. 计算可知此时依然有
+$$\frac{\dif}{\dif t}V_f(t)=-4M_{\bm{a}}(t)$$
+
+现在我们来计算$M_{\bm{a}}(t)$的导数: 
+$$\frac{\dif}{\dif t}M_{\bm{a}}(t)=\operatorname{Im}\frac{\dif}{\dif t}\int_{D}\bm{a}\cdot u\nabla\ovl{u}\dif x$$
+$$=\operatorname{Im}\frac{\dif}{\dif t}\int_{D}a_ju\ovl{u}_j\dif x=\operatorname{Im}\int_{D}a_j(u_t\partial_j\ovl{u}+u\partial_j\ovl{u}_t)\dif x$$
+$$=\operatorname{Im}\int_{D}a_ju_t\partial_j\ovl{u}\dif x+\operatorname{Im}\int_{D}\left[\partial_j(a_ju\ovl{u}_t)-\ovl{u}_t\partial_j(a_ju)\right]\dif x$$
+\section{整体理论}
+\subsection{已知结果}
+我们现在把已知的整体结果做一个表格. 
+
+\begin{tabular}{|c|p{4cm}|p{4cm}|}
+\hline
+& 散焦情形($\mu=1$)&聚焦情形($\mu=-1$)\\
+\hline
+$L^2$次临界& GWP,散射 & \\
+\hline
+$L^2$临界& GWP,散射 &1.负能量解爆破 2.阈值以下GWP且散射\\
+\hline
+$H^1$次临界& GWP,散射 &\\
+\hline
+$\dot{H}^1$临界& GWP,散射 &\\
+\hline
+\end{tabular}
+\section{散射}
+我们说一个解是散射的, 如果它趋于自由方程的解. 
+\section{基态}
+方程的基态与整体结果有密不可分的联系. 
+
+\chapter{$\mathbb{T}^d$上的非线性Schr\"odinger方程}
+\section{线性方程}
+\section{时空估计}
 \section{局部理论}
 \section{守恒律}
 \section{整体理论}
-\section{散射}
-\section{基态}
 
 
 \end{document}
